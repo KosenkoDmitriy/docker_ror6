@@ -8,3 +8,5 @@ docker-compose exec nginx /bin/sh
 docker-compose exec nginx cat /etc/nginx/conf.d/web-app.conf
 
 docker-compose exec nginx service nginx reload
+
+echo '' > web-app/config/credentials/production.key
