@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: ./nginx/Dockerfile
     ports:
-      - "8080:80"
+      - 8080:8080
       - 1443:443
     depends_on:
       - web-app
