@@ -22,3 +22,11 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+docker-compose run web-app bundle install
+docker-compose run web-app rails webpacker:install
+
+docker-compose exec web-app rails g controller welcome
+
+docker-compose up --build -V
+docker-compose exec web-app tail -f /web-app/log/production.log
