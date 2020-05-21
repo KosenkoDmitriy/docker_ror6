@@ -14,12 +14,12 @@ services:
     # environment:
     #   RAILS_ROOT: web-app
   nginx:
-    build: 
+    build:
       context: .
       dockerfile: ./nginx/Dockerfile
     ports:
       - 8080:8080
-      - 1443:443
+      - 1443:1443
     depends_on:
       - web-app
     volumes:
