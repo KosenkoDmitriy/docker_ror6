@@ -1,11 +1,28 @@
 FROM ruby:2.5.3
 
-RUN curl https://deb.nodesource.com/setup_12.x | bash
+RUN touch /etc/apt/sources.list
+RUN echo "" > /etc/apt/sources.list
+RUN echo -n "" > /etc/apt/sources.list
+# RUN echo "deb https://archive.debian.org/debian stretch main contrib non-free" >> /etc/apt/sources.list 
+# RUN echo "deb-src https://archive.debian.org/debian stretch main contrib non-free" >> /etc/apt/sources.list 
+# RUN echo "deb https://archive.debian.org/debian stretch-backports main contrib non-free" >> /etc/apt/sources.list 
+# RUN echo  "deb https://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list 
+# RUN echo  "deb-src https://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+
+RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb-src http://archive.debian.org/debian/ stretch main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb-src http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+RUN apt-get update -qq && apt-get install apt-transport-https ca-certificates
+
 RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+## RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn 
+RUN apt-get update && apt-get install -y yarn nano
 
-# RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn 
-RUN apt-get update -qq && apt-get install -y nodejs yarn 
+RUN curl https://deb.nodesource.com/setup_12.x | bash
+RUN apt-get install -y nodejs
 
 
 ENV RAILS_ENV=production
@@ -36,18 +53,20 @@ RUN mkdir -p node_modules
 RUN mkdir -p public/packs
 RUN mkdir -p tmp/cache
 
-# COPY Gemfile $RAILS_ROOT/Gemfile
+COPY Gemfile $RAILS_ROOT/Gemfile
 # COPY Gemfile.lock $RAILS_ROOT/Gemfile.lock
 
-# COPY . $RAILS_ROOT
-# RUN gem install bundler
-# RUN bundle install
+COPY . $RAILS_ROOT
+RUN gem install bundler -v 2.3.2
+RUN bundle install
 
-# RUN export NODE_OPTIONS="--max-old-space-size=4096"
-# RUN yarn install --check-files --ignore-engines
-# RUN bundle exec rake db:migrate
-# # RUN bundle exec rake db:seed
+RUN export NODE_OPTIONS="--max-old-space-size=4096"
+# RUN yarn install 
+RUN yarn install --check-files --ignore-engines
+RUN bundle exec rake db:migrate
+# RUN bundle exec rake db:seed
 # RUN bundle exec rake assets:precompile
+# RUN bundle exec rails credentials:edit --environment production
 
 # Add a script to be executed every time the container starts.
 # COPY entrypoint.sh /usr/bin/
